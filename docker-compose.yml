@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    container_name: tenant_backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env  # Docker will automatically parse this and inject it into the container
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
