@@ -5,7 +5,7 @@ const {
   getUsers,
   createUser,
   updateUser,
-  deactivateUser,
+  toggleUserStatus,
 } = require('../controllers/userController');
 const { authUser: loginUser } = require('../controllers/authController');
 const { protect } = require('../middleware/authMiddleware');
@@ -21,6 +21,6 @@ router.route('/')
 
 router.route('/:id')
   .put(updateUser)
-  .delete(deactivateUser);
+  .delete(toggleUserStatus);
 
 module.exports = router;
