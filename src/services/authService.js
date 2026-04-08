@@ -2,7 +2,7 @@ const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
 
 const loginUser = async (email, password) => {
-  const user = await User.findOne({ email }).select('+password').populate('role').populate('site');
+  const user = await User.findOne({ email }).select('+password').populate('role');
 
   if (user && (await user.matchPassword(password))) {
     if (user.status === 'inactive') {
@@ -14,7 +14,6 @@ const loginUser = async (email, password) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      site: user.site,
       token: generateToken(user._id),
     };
   } else {
