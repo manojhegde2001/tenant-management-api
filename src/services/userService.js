@@ -20,7 +20,6 @@ const getUsers = async (query) => {
 
   const users = await User.find(searchQuery)
     .populate('role')
-    .populate('site')
     .sort({ createdAt: -1 })
     .skip(skip)
     .limit(parseInt(limit));
@@ -42,7 +41,6 @@ const updateUser = async (id, userData) => {
   user.name = userData.name || user.name;
   user.email = userData.email || user.email;
   user.role = userData.role || user.role;
-  user.site = userData.site || user.site;
   user.status = userData.status || user.status;
 
   if (userData.password) {

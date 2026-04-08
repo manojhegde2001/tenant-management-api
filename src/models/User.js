@@ -26,11 +26,6 @@ const userSchema = new mongoose.Schema(
       ref: 'Role',
       required: true,
     },
-    site: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Site',
-      required: true,
-    },
     status: {
       type: String,
       enum: ['active', 'inactive'],

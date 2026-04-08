@@ -25,12 +25,10 @@ app.get('/', (req, res) => {
 // Import Routes
 const userRoutes = require('./routes/userRoutes');
 const roleRoutes = require('./routes/roleRoutes');
-const siteRoutes = require('./routes/siteRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 
 app.use('/api/users', userRoutes);
 app.use('/api/roles', roleRoutes);
-app.use('/api/sites', siteRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
 // Error Handling
