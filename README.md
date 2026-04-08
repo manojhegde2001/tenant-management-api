@@ -1,64 +1,91 @@
 # Tenant Management Backend
 
-A clean-architecture MERN backend for managing users, roles, and sites.
+A high-performance, secure, and scalable API built with **Node.js**, **Express**, and **MongoDB**. This backend serves as the core engine for the Ada Lovelace Technologies Tenant Management System.
 
-## Tech Stack
-- Node.js
-- Express
-- MongoDB (Mongoose)
-- JWT Authentication
+---
 
-## Folder Structure
-- `src/config`: Database connection
-- `src/models`: Mongoose schemas
-- `src/services`: Business logic (Service Layer)
-- `src/controllers`: Request/Response handling
-- `src/routes`: API endpoints
-- `src/middleware`: Auth and Error handling
-- `src/utils`: Helpers (JWT, constants)
+## 🏗️ Architecture: Service-Layer Pattern
 
-## Setup Instructions
+This project employs a strict **Service-Layer Architecture** to keep business logic separate from transport logic (HTTP).
 
-1.  **Install Dependencies**:
-    ```bash
-    npm install
-    ```
+- **`src/server.js`**: Entry point for initializing the server and DB.
+- **`src/app.js`**: Express application configuration and middleware setup.
+- **`src/routes/`**: Defines the API endpoints and maps them to controllers.
+- **`src/controllers/`**: Handles the request/response lifecycle.
+- **`src/services/`**: **Core Business Logic**. Services handle DB operations and data processing.
+- **`src/models/`**: Mongoose schemas and data validation logic.
+- **`src/middleware/`**: JWT validation, error handling, and activity logging.
 
-2.  **Environment Variables**:
-    Create a `.env` file in the root:
-    ```env
-    PORT=5000
-    MONGO_URI=your_mongodb_uri
-    JWT_SECRET=your_jwt_secret
-    NODE_ENV=development
-    ```
+---
 
-3.  **Run the Server**:
-    - Development: `npm run dev` (requires nodemon)
-    - Production: `npm start`
+## 🔒 Security Features
 
-## API Endpoints
+- **JWT Authentication**: Stateless authentication using JSON Web Tokens.
+- **Password Hashing**: Industry-standard hashing using `bcryptjs`.
+- **CORS Configuration**: Restricted cross-origin resource sharing for security.
+- **RBAC (Role-Based Access Control)**: Granular permission management for developers, admins, and users.
 
-### Auth
-- `POST /api/users/login`: Login user and get token
+---
 
-### Users
-- `GET /api/users`: List users (Search & Pagination)
-- `POST /api/users`: Create user
-- `PUT /api/users/:id`: Update user
-- `DELETE /api/users/:id`: Deactivate user
+## 🚀 Getting Started
 
-### Roles
-- `GET /api/roles`: List roles
-- `POST /api/roles`: Create role
-- `PUT /api/roles/:id`: Update role
-- `DELETE /api/roles/:id`: Delete role (fails if assigned to users)
+### 1. Installation
+```bash
+npm install
+```
 
-### Sites
-- `GET /api/sites`: List sites
-- `POST /api/sites`: Create site
-- `PUT /api/sites/:id`: Update site
-- `DELETE /api/sites/:id`: Delete site
+### 2. Environment Variables
+Create a `.env` file with the following keys:
+```env
+PORT=5000
+MONGO_URI=mongodb+srv://...
+JWT_SECRET=your_super_secret_key
+NODE_ENV=development
+```
 
-### Dashboard
-- `GET /api/dashboard`: Get statistics
+### 3. Running the Server
+- **Development**: `npm run dev` (watches for changes)
+- **Production**: `npm start`
+- **Seed Data**: `npm run seed` (populates initial roles and users)
+
+---
+
+## 🛣️ API Documentation
+
+### Auth & Users
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/api/users/login` | Authenticate user and return JWT |
+| `GET` | `/api/users` | Fetch all users (with pagination/search) |
+| `POST` | `/api/users` | Create a new user account |
+| `PUT` | `/api/users/:id` | Update user details or status |
+
+### Roles & Permissions
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/roles` | List all available system roles |
+| `POST` | `/api/roles` | Define a new role with permissions |
+
+### Sites & Infrastructure
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/sites` | List all managed sites |
+| `POST` | `/api/sites` | Register a new site |
+
+### Dashboard Analytics
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/api/dashboard` | Get real-time system statistics |
+
+---
+
+## 🛠️ Tech Stack
+- **Runtime**: Node.js
+- **Framework**: Express.js
+- **Database**: MongoDB (via Mongoose)
+- **Logging**: Morgan
+- **Error Handling**: `express-async-handler`
+
+---
+
+*Powered by Ada Lovelace Technologies.*
