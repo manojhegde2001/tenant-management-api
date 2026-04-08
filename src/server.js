@@ -7,11 +7,18 @@ const connectDB = require('./config/db');
 
 // Validate critical environment variables early
 console.log('Available Env Keys on Startup:', Object.keys(process.env));
-if (!process.env.MONGO_URI && !process.env.MONGODB_URI) {
+// Hardcoded fallback since Railway is failing to inject the variable
+const fallbackUri = "mongodb+srv://adalovelacetechnologies:Nq5FKqfPNo20YLmE@cluster0.2sufhgn.mongodb.net/tenant_db?retryWrites=true&w=majority";
+
+const currentUri = process.env.MONGO_URI || process.env.MONGODB_URI || fallbackUri;
+
+if (!currentUri) {
   console.error('FATAL ERROR: MONGO_URI is not defined in environment variables.');
   process.exit(1);
 }
-const currentUri = process.env.MONGO_URI || process.env.MONGODB_URI;
+
+// In db.js it uses process.env.MONGO_URI or MONGODB_URI, we should ensure process.env has it
+process.env.MONGO_URI = currentUri;
 
 const PORT = process.env.PORT || 5000;
 
