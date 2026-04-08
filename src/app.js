@@ -33,26 +33,24 @@ const frontendPath = path.join(__dirname, '../../frontend/dist');
 app.use(express.static(frontendPath));
 
 // SPA Fallback: Serve index.html for any non-API routes
-app.get('(.*)', (req, res) => {
-  if (!req.path.startsWith('/api')) {
-    res.sendFile(path.join(frontendPath, 'index.html'), (err) => {
-      if (err) {
-        // Fallback message if frontend isn't built yet
-        res.status(404).json({ 
-          success: false, 
-          message: 'Frontend build not found. Please run "npm run build" in the frontend directory.',
-          path: req.path
-        });
-      }
-    });
-  } else {
-    // Standard 404 for API routes
-    res.status(404).json({ success: false, message: 'API route not found' });
+// Using a standard middleware to avoid regex errors in Express 5
+app.use((req, res, next) => {
+  // If it's an API route that wasn't handled, pass to 404 handler
+  if (req.url.startsWith('/api')) {
+    return next();
   }
+  
+  // For any other route, try to serve the frontend index.html
+  res.sendFile(path.join(frontendPath, 'index.html'), (err) => {
+    if (err) {
+      // If index.html is missing, pass to standard error handlers
+      next();
+    }
+  });
 });
 
 // Error Handling (Middleware)
-app.use(notFound); // This will still handle uncaught API routes if needed
+app.use(notFound); 
 app.use(errorHandler);
 
 module.exports = app;
