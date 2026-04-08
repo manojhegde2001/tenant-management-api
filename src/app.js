@@ -2,7 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const path = require('path');
-const history = require('connect-history-api-fallback');
 const { errorHandler, notFound } = require('./middleware/errorMiddleware');
 
 const app = express();
@@ -19,7 +18,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-// 1. API Routes (Must come BEFORE history-api-fallback)
+// 1. API Routes (Check these FIRST)
 const userRoutes = require('./routes/userRoutes');
 const roleRoutes = require('./routes/roleRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
@@ -31,18 +30,14 @@ app.use('/api/dashboard', dashboardRoutes);
 // 2. Static files for Frontend
 const frontendPath = path.resolve(__dirname, '..', '..', 'frontend', 'dist');
 
-// 3. SPA Fallback (Industry standard library)
-// This will intercept any non-API, non-file request and point it to index.html
-app.use(history({
-  verbose: true,
-  index: '/index.html',
-  rewrites: [
-    { from: /^\/api\/.*$/, to: (context) => context.parsedUrl.pathname }
-  ]
-}));
-
-// 4. Serve static assets
+// 3. Serve physical static assets
 app.use(express.static(frontendPath));
+
+// 4. SPA Fallback: ALL non-API requests that haven't matched a file should serve index.html
+// This regex matches any path that DOES NOT begin with /api
+app.get(/^(?!\/api).+/, (req, res) => {
+  res.sendFile(path.join(frontendPath, 'index.html'));
+});
 
 // Final Error Handling (Middleware)
 app.use(notFound); 
