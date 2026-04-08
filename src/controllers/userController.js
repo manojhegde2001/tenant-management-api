@@ -34,14 +34,14 @@ const updateUser = asyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Deactivate user
+// @desc    Toggle user status (activate/deactivate)
 // @route   DELETE /api/users/:id
 // @access  Private
-const deactivateUser = asyncHandler(async (req, res) => {
-  const user = await userService.deactivateUser(req.params.id);
+const toggleUserStatus = asyncHandler(async (req, res) => {
+  const user = await userService.toggleUserStatus(req.params.id);
   res.status(200).json({
     success: true,
-    message: 'User deactivated successfully',
+    message: `User ${user.status === 'active' ? 'activated' : 'deactivated'} successfully`,
   });
 });
 
@@ -49,5 +49,5 @@ module.exports = {
   getUsers,
   createUser,
   updateUser,
-  deactivateUser,
+  toggleUserStatus,
 };

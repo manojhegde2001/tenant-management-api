@@ -50,11 +50,11 @@ const updateUser = async (id, userData) => {
   return await user.save();
 };
 
-const deactivateUser = async (id) => {
+const toggleUserStatus = async (id) => {
   const user = await User.findById(id);
   if (!user) throw new Error('User not found');
 
-  user.status = 'inactive';
+  user.status = user.status === 'active' ? 'inactive' : 'active';
   return await user.save();
 };
 
@@ -62,5 +62,5 @@ module.exports = {
   createUser,
   getUsers,
   updateUser,
-  deactivateUser,
+  toggleUserStatus,
 };
