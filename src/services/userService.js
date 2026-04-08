@@ -29,6 +29,7 @@ const getUsers = async (query) => {
   return {
     users,
     page: parseInt(page),
+    limit: parseInt(limit),
     pages: Math.ceil(total / limit),
     total,
   };
