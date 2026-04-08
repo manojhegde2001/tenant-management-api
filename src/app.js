@@ -29,7 +29,9 @@ app.use('/api/roles', roleRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
 // Static files for Frontend
-const frontendPath = path.join(__dirname, '../../frontend/dist');
+// We resolve the path to be absolute to avoid any relative path ambiguity
+const frontendPath = path.resolve(__dirname, '../../frontend/dist');
+console.log('Serving frontend from:', frontendPath);
 app.use(express.static(frontendPath));
 
 // SPA Fallback: Serve index.html for any non-API routes
@@ -41,9 +43,12 @@ app.use((req, res, next) => {
   }
   
   // For any other route, try to serve the frontend index.html
-  res.sendFile(path.join(frontendPath, 'index.html'), (err) => {
+  // We use the absolute path here as well
+  const indexPath = path.join(frontendPath, 'index.html');
+  res.sendFile(indexPath, (err) => {
     if (err) {
-      // If index.html is missing, pass to standard error handlers
+      // If index.html is missing or error occurs, pass to standard error handlers
+      console.error('Fallback error:', err.message);
       next();
     }
   });
