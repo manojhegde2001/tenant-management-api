@@ -19,7 +19,7 @@ const seed = async () => {
     // 1. Create EXACTLY 5 Testing Roles
     const rolesData = [
       { name: 'Admin', permissions: ['READ_USERS', 'WRITE_USERS', 'READ_ROLES', 'WRITE_ROLES', 'READ_SITES', 'WRITE_SITES'] },
-      { name: 'Editor', permissions: ['READ_USERS', 'WRITE_USERS', 'READ_SITES', 'WRITE_SITES'] },
+      { name: 'Editor', permissions: ['READ_USERS', 'WRITE_USERS', 'READ_ROLES', 'READ_SITES', 'WRITE_SITES'] },
       { name: 'Manager', permissions: ['READ_USERS', 'WRITE_USERS', 'READ_ROLES', 'READ_SITES'] },
       { name: 'Auditor', permissions: ['READ_USERS', 'READ_ROLES', 'READ_SITES'] },
       { name: 'Viewer', permissions: ['READ_USERS', 'READ_SITES'] }
