@@ -18,11 +18,11 @@ const seed = async () => {
 
     // 1. Create EXACTLY 5 Testing Roles
     const rolesData = [
-      { name: 'Admin', permissions: ['READ_USERS', 'WRITE_USERS', 'READ_ROLES', 'WRITE_ROLES', 'READ_SITES', 'WRITE_SITES'] },
-      { name: 'Editor', permissions: ['READ_USERS', 'WRITE_USERS', 'READ_ROLES', 'READ_SITES', 'WRITE_SITES'] },
-      { name: 'Manager', permissions: ['READ_USERS', 'WRITE_USERS', 'READ_ROLES', 'READ_SITES'] },
-      { name: 'Auditor', permissions: ['READ_USERS', 'READ_ROLES', 'READ_SITES'] },
-      { name: 'Viewer', permissions: ['READ_USERS', 'READ_SITES'] }
+      { name: 'Admin', permissions: ['READ_USERS', 'WRITE_USERS', 'READ_ROLES', 'WRITE_ROLES'] },
+      { name: 'Editor', permissions: ['READ_USERS', 'WRITE_USERS', 'READ_ROLES'] },
+      { name: 'Manager', permissions: ['READ_USERS', 'WRITE_USERS', 'READ_ROLES'] },
+      { name: 'Auditor', permissions: ['READ_USERS', 'READ_ROLES'] },
+      { name: 'Viewer', permissions: ['READ_USERS'] }
     ];
 
     const createdRoles = await Role.insertMany(rolesData);
@@ -30,8 +30,8 @@ const seed = async () => {
 
     const getRoleId = (name) => createdRoles.find(r => r.name === name)._id;
 
-    // 2. Create EXACTLY 5 Testing Users
-    const usersData = [
+    // 2. Create Core Testing Users
+    const coreUsers = [
       { name: 'Admin User', email: 'admin@example.com', password: 'adminpassword123', role: getRoleId('Admin'), status: 'active' },
       { name: 'Jane Editor', email: 'jane@example.com', password: 'password123', role: getRoleId('Editor'), status: 'active' },
       { name: 'Mike Manager', email: 'mike@example.com', password: 'password123', role: getRoleId('Manager'), status: 'active' },
@@ -39,8 +39,19 @@ const seed = async () => {
       { name: 'Tom Viewer', email: 'tom@example.com', password: 'password123', role: getRoleId('Viewer'), status: 'active' }
     ];
 
-    await User.create(usersData);
-    console.log(`${usersData.length} Testing Users created.`);
+    // 3. Generate 25 Additional Users to reach 30
+    const roles = ['Admin', 'Editor', 'Manager', 'Auditor', 'Viewer'];
+    const additionalUsers = Array.from({ length: 25 }).map((_, i) => ({
+      name: `User ${i + 6}`,
+      email: `user${i + 6}@example.com`,
+      password: 'password123',
+      role: getRoleId(roles[Math.floor(Math.random() * roles.length)]),
+      status: Math.random() > 0.2 ? 'active' : 'inactive'
+    }));
+
+    const allUsers = [...coreUsers, ...additionalUsers];
+    await User.create(allUsers);
+    console.log(`${allUsers.length} total Users created (5 core + 25 generated).`);
 
     console.log('\n--- Credentials for Testing ---');
     console.log('Username: admin@example.com');

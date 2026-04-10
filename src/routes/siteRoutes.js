@@ -11,11 +11,11 @@ const { protect, authorize } = require('../middleware/authMiddleware');
 router.use(protect);
 
 router.route('/')
-  .get(authorize('READ_SITES'), getSites)
-  .post(authorize('WRITE_SITES'), createSite);
+  .get(getSites)
+  .post(createSite);
 
 router.route('/:id')
-  .put(authorize('WRITE_SITES'), updateSite)
-  .delete(authorize('WRITE_SITES'), deleteSite);
+  .put(updateSite)
+  .delete(deleteSite);
 
 module.exports = router;
