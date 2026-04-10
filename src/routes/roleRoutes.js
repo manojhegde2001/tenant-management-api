@@ -6,16 +6,16 @@ const {
   updateRole,
   deleteRole,
 } = require('../controllers/roleController');
-const { protect } = require('../middleware/authMiddleware');
+const { protect, authorize } = require('../middleware/authMiddleware');
 
 router.use(protect);
 
 router.route('/')
-  .get(getRoles)
-  .post(createRole);
+  .get(authorize('READ_ROLES'), getRoles)
+  .post(authorize('WRITE_ROLES'), createRole);
 
 router.route('/:id')
-  .put(updateRole)
-  .delete(deleteRole);
+  .put(authorize('WRITE_ROLES'), updateRole)
+  .delete(authorize('WRITE_ROLES'), deleteRole);
 
 module.exports = router;

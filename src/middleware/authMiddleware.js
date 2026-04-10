@@ -15,7 +15,8 @@ const protect = asyncHandler(async (req, res, next) => {
       // Decode token id
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'supersecretkey123');
 
-      req.user = await User.findById(decoded.id).select('-password');
+      // Populate role to access permissions array
+      req.user = await User.findById(decoded.id).select('-password').populate('role');
 
       if (!req.user) {
         res.status(401);
@@ -40,4 +41,26 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-module.exports = { protect };
+// Middleware to authorize specific permissions
+const authorize = (...requiredPermissions) => {
+  return (req, res, next) => {
+    if (!req.user || !req.user.role) {
+      res.status(403);
+      throw new Error('Access denied: Role information missing');
+    }
+
+    // Check if user has ALL the required permissions
+    const hasAllPermissions = requiredPermissions.every((perm) =>
+      req.user.role.permissions.includes(perm)
+    );
+
+    if (!hasAllPermissions) {
+      res.status(403);
+      throw new Error(`Access denied: Required permissions missing (${requiredPermissions.join(', ')})`);
+    }
+
+    next();
+  };
+};
+
+module.exports = { protect, authorize };

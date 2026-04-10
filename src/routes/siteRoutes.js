@@ -6,16 +6,16 @@ const {
   updateSite,
   deleteSite,
 } = require('../controllers/siteController');
-const { protect } = require('../middleware/authMiddleware');
+const { protect, authorize } = require('../middleware/authMiddleware');
 
 router.use(protect);
 
 router.route('/')
-  .get(getSites)
-  .post(createSite);
+  .get(authorize('READ_SITES'), getSites)
+  .post(authorize('WRITE_SITES'), createSite);
 
 router.route('/:id')
-  .put(updateSite)
-  .delete(deleteSite);
+  .put(authorize('WRITE_SITES'), updateSite)
+  .delete(authorize('WRITE_SITES'), deleteSite);
 
 module.exports = router;
