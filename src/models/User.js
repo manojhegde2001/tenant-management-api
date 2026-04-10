@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema(
       ref: 'Role',
       required: true,
     },
+    createdAt: {
+      type: Date,
+      default: new Date(),
+    },
     status: {
       type: String,
       enum: ['active', 'inactive'],
